@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Dojo Wall</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/js/materialize.min.js"></script>
+  </head>
+  <body>
+  <nav>
+    <div class="nav-wrapper">
+      <a href="/" class="brand-logo">Dojo Message Board</a>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="row">
+    {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+      <div class="col s6">
+      <h4>Register</h4>
+      <form class="" action="/create" method="post">
+        {% csrf_token %}
+        <label for="first_name">First Name:</label>
+        <input type="text" name="first_name" value="">
+        <label for="last_name">Last Name:</label>
+        <input type="text" name="last_name" value="">
+        <label for="email">Email:</label>
+        <input type="text" name="email" value="">
+        <label for="password">Password:</label>
+        <input type="text" name="password" value="">
+        <label for="cpassword">confirm Password:</label>
+        <input type="text" name="cpassword" value="">
+
+        <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+          <i class="material-icons right">send</i>
+        </button>
+      </form>
+      </div>
+
+      <div class="col s6">
+      <h4>Login</h4>
+      <form class="" action="/login" method="post">
+        {% csrf_token %}
+        <label for="email">Email:</label>
+        <input type="text" name="email" value="">
+        <label for="password">Password:</label>
+        <input type="text" name="password" value="">
+
+        <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+          <i class="material-icons right">send</i>
+        </button>
+
+      </form>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="js/materialize.min.js"></script>
+  </body>
+</html>

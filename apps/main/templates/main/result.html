@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Dojo Wall</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/js/materialize.min.js"></script>
+    <style>
+      li a, p a {
+        margin-right: 10px;
+      }
+      li {
+        list-style: none;
+        text-decoration: none;
+
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-wrapper">
+        <h1 class="brand-logo">Welcome {{ request.session.name }}</h1>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li><a href="/logout">Logout</a></li>
+          <li><a href="/most">Most Popular Messages</a></li>
+        </li>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="row">
+        <p>Successfully {{ request.session.method }}</p>
+        <form class="col s12" action="/create_message" method="post">
+          <label for="textarea1">Enter Message Here</label>
+
+          <div class="row">
+            <div class="input-field col s12">
+              {% csrf_token %}
+              <textarea name="message" rows="10" cols="50" id="textarea1" class="materialize-textarea"></textarea>
+              <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+                <i class="material-icons right">send</i>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <h4>Recent Dojo Messages:</h4>
+      {% for message in messages %}
+      <ul>
+        <div class="row">
+          <div class="col s12 m6">
+            <div class="card blue-grey darken-1">
+              <div class="card-content white-text">
+                <li>{{message.message}} {{message.created_at}} Likes: {{message.like}}, {{message.user_id.first_name}} {{message.user_id.last_name}}</li>
+              </div>
+              <div class="card-action">
+                <li><a href="/like/{{message.id}}"><button class="btn waves-effect waves-light" type="submit" name="action">Like
+                  <i class="material-icons right">thumb_up</i>
+                </button></a>{% if request.session.id == message.user_id_id %}<a href="{% url 'main:delete' id=message.id%}"><button class="btn waves-effect waves-light" type="submit" name="action">Delete
+                  <i class="material-icons right">delete</i>
+                </button></a>{% endif %}</li>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s6 offset-s1">
+            <div class="card blue-grey darken-1">
+              <div class="card-content white-text">
+                {% for comment in comments %}
+                {% if comment.message_id == message.id %}
+                  <p><span class="white-text">{{comment.comment}}  {{comment.created_at}} Like: {{comment.like}} {{comment.message.user_id.first_name}} {{comment.message.user_id.last_name}}</span></p>
+              </div>
+              <div class="card-action">
+                <p><a href="/like_comment/{{comment.id}}"><button class="btn waves-effect waves-light" type="submit" name="action">Like
+                  <i class="material-icons right">thumb_up</i>
+                </button></a>{% if request.session.id == comment.user_id_id %}<a href="{%  url 'main:delete_comment' id=comment.id%}"><button class="btn waves-effect waves-light" type="submit" name="action">Delete
+                  <i class="material-icons right">delete</i>
+                </button></a>{% endif %}</p>
+                {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </ul id="textarea2">
+        <div class="row">
+          <li>
+            <form class="col s10" action="/create_comment/{{message.id}}" method="post">
+              <label for="textarea1">Reply Here</label>
+              <div class="row">
+                <div class="input-field col s10">
+                  {% csrf_token %}
+                  <textarea name="comment" rows="3" cols="30" id="textarea2" class="materialize-textarea"></textarea>
+                  <button class="btn waves-effect waves-light" type="submit" name="action">Post Reply
+                    <i class="material-icons right">send</i>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </li>
+        </div>
+      </ul>
+      {% endfor %}
+    </div>
+
+  </body>
+</html>
